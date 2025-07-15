@@ -1,0 +1,19 @@
+{% extends 'index.html' %}
+ {% block title %}
+    <title>Details | Shopkart</title>
+    {% endblock %}
+{% block content %}
+  <button style="margin-left: 5px;margin-top: 5px;" class="btn btn-dark"><a style="text-decoration: none; color: #fff;" href="/">Back to Home</a></button>
+   <li class="details" style="border: none; list-style-type: none; margin: 20px;"> 
+    <img class="rounded" src='{{product.image.url}}'  alt="" width="350" height="350"/>    
+   <div>
+      <h3>{{ product.productName }}</h3>
+    <p> <strong>Price:</strong> 
+        ₹{{ product.sellingPrice }}</p>
+    <p><strong>Category:</strong> 
+        {{ product.catagory}}</p>
+    <p><strong>Description:</strong> 
+        {{ product.description }}</p>
+   </div> 
+   </li>
+{% endblock %}

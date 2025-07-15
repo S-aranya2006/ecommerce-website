@@ -1,0 +1,39 @@
+
+{% extends 'index.html' %}
+ {% block title %}
+    <title>Shopkart | Online Shopping</title>
+    {% endblock %}
+{% block content %}
+
+{% include 'navbar.html' %}
+<div class="container mt-3">
+   <ul class="ul">
+    
+                {% for product in products.object_list %}
+                   <a href="{% url 'product_detail' product.id %}" class="text-decoration-none ">
+                        <li class="list">
+                         <img class="rounded" src='media/{{product.image}}'  alt="" width="230" height="230"/>   
+                         <h6 class="text-dark">{{ product.productName }}</h6>
+                        <strong>₹{{ product.sellingPrice }}</strong>
+                       </li>
+                     </a>
+                {% endfor %}
+   
+    </ul>
+    <div class="pagination">
+       {% if products.has_previous %}
+           <a class="previous"  href="?page={{products.previous_page_number}}">Previous Page</a>
+        {% endif %}
+        {% for i in numbers %}
+          {% if i == products.number %}
+            <button style="background-color: red;" class="pageno" >{{i}}</button> 
+          {% else %}
+             <a href="?page={{i}}"><button class="pageno" >{{i}}</button></a>
+           {% endif %}    
+        {% endfor %}
+        {%if products.has_next %}
+            <a class="next" href="?page={{products.next_page_number}}">Next Page</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

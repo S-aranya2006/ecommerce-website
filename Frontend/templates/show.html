@@ -1,0 +1,24 @@
+{% extends 'index.html' %}
+ {% block title %}
+    <title>Search | Shopkart</title>
+    {% endblock %}
+{% block content %}
+<div>
+  <h6>Total product : <strong>{{count.id__count}}</strong></h6>
+<table>
+
+ {% for product in products %}
+    <tbody>
+      <tr>
+        <th>{{product.productName}}</th>
+        <td>{{product.description}}</td>
+        <td>{{product.sellingPrice}}</td>
+      </tr>
+    </tbody> 
+  {% endfor %}
+  </table></div>
+  <!-- {% for value in values %}
+  <p>{{value.id}}-{{value.description}}</p>
+  {% endfor %} -->
+{% endblock %}
+
