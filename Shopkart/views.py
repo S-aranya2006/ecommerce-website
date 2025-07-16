@@ -67,10 +67,9 @@ class ProductView(GenericAPIView,mixins.CreateModelMixin,mixins.DestroyModelMixi
     def put(self,request,id=None):
         instance = self.get_object()
         serializer = ProductSerializer(instance,data=request.data)
-        bulk_update(serializer)
-        # if serializer.is_valid():
-        #     serializer.save()
-        #     return Response("Product updated!")
+        if serializer.is_valid():
+            serializer.save()
+            return Response("Product updated!")
         return Response(serializer.errors,status=400)
     def delete(self,request,id=None):
         self.destroy(request)
