@@ -9,10 +9,6 @@ from rest_framework import status
 
 
 class CatagoryTest(TestCase):
-    def Test(self):
-        catagory = CatagoryModel.objects.create(name='Notebook',description='something')
-        self.assertEqual(catagory.name,'Notebook')
-        self.assertEqual(catagory.description ,'something')
     def setUp(self):
         self.client =APIClient()
         self.catagory = ProductModel.objects.create(name='Notebook',description='something about notebook')
@@ -21,6 +17,21 @@ class CatagoryTest(TestCase):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertGreaterEqual(len(response.data['results']),1)
+    def create(self):
+        data = { "name": "dress","description":"something about dressess"}
+        response = self.client.post(self.list_url,data)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(CatagoryModel.objects.count(),1)
+    def update(self):
+        data =  { "name": "dressess","description":"something about dressess"}
+        response = self.client.put(self.list_url,data)
+        self.catagory.refresh_from_db()
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertEqual(self.catagory.name,'dressess')
+    def delete(self):
+        response = self.client.delete(self.list_url)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertTrue(CatagoryModel.objects.filter(id=self.catagory.id).exists())
 
 class ProductViewTest(APITestCase):
     def setUp(self):
