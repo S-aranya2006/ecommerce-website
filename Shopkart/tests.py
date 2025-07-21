@@ -13,6 +13,14 @@ class CatagoryTest(TestCase):
         catagory = CatagoryModel.objects.create(name='Notebook',description='something')
         self.assertEqual(catagory.name,'Notebook')
         self.assertEqual(catagory.description ,'something')
+    def setUp(self):
+        self.client =APIClient()
+        self.catagory = ProductModel.objects.create(name='Notebook',description='something about notebook')
+        self.list_url = reverse('catagory')
+    def list(self):
+        response = self.client.get(self.list_url)
+        self.assertEqual(response.status_code,status.HTTP_200_OK)
+        self.assertGreaterEqual(len(response.data['results']),1)
 
 class ProductViewTest(APITestCase):
     def setUp(self):
@@ -38,6 +46,7 @@ class ProductViewTest(APITestCase):
         response = self.client.get(self.detail_url,format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.product.productName, "Laptop1")
+
 
     def test_create_product(self):
         data = {
