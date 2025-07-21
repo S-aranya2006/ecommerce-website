@@ -63,14 +63,14 @@ class ProductView(GenericAPIView,mixins.CreateModelMixin,mixins.DestroyModelMixi
         if serializer.is_valid():
             serializer.save()
             return Response("Product added!")
-        return Response(serializer.errors,status=400)
+        return Response(serializer.errors,status=200)
     def put(self,request,id=None):
         instance = self.get_object()
         serializer = ProductSerializer(instance,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response("Product updated!")
-        return Response(serializer.errors,status=400)
+        return Response(serializer.errors,status=200)
     def delete(self,request,id=None):
         self.destroy(request)
         return Response("Product deleted!")
@@ -89,14 +89,14 @@ class CatagoryView(GenericAPIView,mixins.CreateModelMixin,mixins.ListModelMixin,
         if serializer.is_valid():
             serializer.save()
             return Response("Catagory added!")
-        return Response(serializer.errors,status=402)
+        return Response(serializer.errors,status=200)
     def put(self,request,id=None):
         instance = self.get_object()
         serializer = CategorySerializer(instance,data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response("Catagory updated!")
-        return Response(serializer.errors,status=402)
+        return Response(serializer.errors,status=200)
     def delete(self,request,id=None):
         self.destroy(request)
         return Response("Catagory deleted!")
