@@ -13,7 +13,7 @@ class CatagoryTest(TestCase):
         catagory = CatagoryModel.objects.create(name='Notebook',description='something')
         self.assertEqual(catagory.name,'Notebook')
         self.assertEqual(catagory.description ,'something')
-        
+
 class ProductViewTest(APITestCase):
     def setUp(self):
         self.client =APIClient()
