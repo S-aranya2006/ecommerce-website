@@ -4,7 +4,7 @@ from django.urls import reverse
 from .models import *
 from .views import *
 from rest_framework import status
-# from django.core.files.uploadedfile import SimpleUploadedFile
+from django.core.files.uploadedfile import SimpleUploadedFile
 # import tempfile
 
 
@@ -32,6 +32,7 @@ class CatagoryTest(TestCase):
         response = self.client.delete(self.list_url)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertTrue(CatagoryModel.objects.filter(id=self.catagory.id).exists())
+  
 
 class ProductViewTest(APITestCase):
     def setUp(self):
@@ -40,7 +41,7 @@ class ProductViewTest(APITestCase):
         self.product = ProductModel.objects.create(
             productName="Laptop1",
             catagory=self.category,
-            image="ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp",
+            image = SimpleUploadedFile("ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp", b"file_content", content_type="image/jpeg"),
             description="A powerful laptop.",
             originalPrice=100000.00,
             sellingPrice=85000.00
@@ -48,18 +49,18 @@ class ProductViewTest(APITestCase):
         self.list_url = reverse('product')
         self.detail_url = reverse('product_detail', kwargs={'id': self.product.id})
 
-    def test_list_products(self):
+    def test_list(self):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertGreaterEqual(len(response.data['results']), 1)
 
-    def test_retrieve_product(self):
+    def test_retrieve(self):
         response = self.client.get(self.detail_url,format='json')
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(self.product.productName, "Laptop1")
 
 
-    def test_create_product(self):
+    def test_create(self):
         data = {
             "productName": "Mouse",
             "catagory": self.category.id,
@@ -72,7 +73,7 @@ class ProductViewTest(APITestCase):
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertEqual(ProductModel.objects.count(), 1)
 
-    def test_update_product(self):
+    def test_update(self):
         data = {
             "productName": "Laptop1",
             "catagory": self.category.id,
@@ -86,11 +87,7 @@ class ProductViewTest(APITestCase):
         self.product.refresh_from_db()
         self.assertEqual(self.product.productName, "Laptop1")
 
-    def test_delete_product(self):
+    def test_delete(self):
         response = self.client.delete(self.detail_url)
         self.assertEqual(response.status_code, status.HTTP_200_OK)
         self.assertTrue(ProductModel.objects.filter(id=self.product.id).exists())
-
-
-
-        
