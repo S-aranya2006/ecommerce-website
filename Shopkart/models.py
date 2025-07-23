@@ -6,8 +6,8 @@ class CatagoryModel(models.Model):
     name = models.CharField(max_length=200,null=False,blank=False,unique=True)
     description = models.TextField(max_length=500,null=False,blank=False)
   
-    # class Meta:
-    #     ordering =['name']
+    class Meta:
+        ordering =['id']
 
     def __str__(self):
         return self.name
