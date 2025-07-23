@@ -4,36 +4,28 @@ from django.urls import reverse
 from .models import *
 from .views import *
 from rest_framework import status
-from django.core.files.uploadedfile import SimpleUploadedFile
+# from django.core.files.uploadedfile import SimpleUploadedFile
 # import tempfile
+import pytest
 
-
+@pytest.mark.django_db
 class CatagoryTest(TestCase):
     def setUp(self):
         self.client =APIClient()
-        self.catagory = ProductModel.objects.create(name='Notebook',description='something about notebook')
+        self.catagory = CatagoryModel.objects.create(name='Notebook',description='something about notebook')
         self.list_url = reverse('catagory')
-    def list(self):
+    def test_list(self):
         response = self.client.get(self.list_url)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
         self.assertGreaterEqual(len(response.data['results']),1)
-    def create(self):
+    def test_create(self):
         data = { "name": "dress","description":"something about dressess"}
         response = self.client.post(self.list_url,data)
         self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(CatagoryModel.objects.count(),1)
-    def update(self):
-        data =  { "name": "dressess","description":"something about dressess"}
-        response = self.client.put(self.list_url,data)
-        self.catagory.refresh_from_db()
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertEqual(self.catagory.name,'dressess')
-    def delete(self):
-        response = self.client.delete(self.list_url)
-        self.assertEqual(response.status_code,status.HTTP_200_OK)
-        self.assertTrue(CatagoryModel.objects.filter(id=self.catagory.id).exists())
-  
+        self.assertEqual(CatagoryModel.objects.count(),2)
+ 
 
+@pytest.mark.django_db
 class ProductViewTest(APITestCase):
     def setUp(self):
         self.client =APIClient()
@@ -41,8 +33,7 @@ class ProductViewTest(APITestCase):
         self.product = ProductModel.objects.create(
             productName="Laptop1",
             catagory=self.category,
-            image = SimpleUploadedFile("ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp", b"file_content", content_type="image/jpeg"),
-            description="A powerful laptop.",
+            image = "ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp",
             originalPrice=100000.00,
             sellingPrice=85000.00
         )
