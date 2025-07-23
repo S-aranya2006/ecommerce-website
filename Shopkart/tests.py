@@ -38,7 +38,7 @@ class ProductViewTest(APITestCase):
             sellingPrice=85000.00
         )
         self.list_url = reverse('product')
-        self.detail_url = reverse('product_detail', kwargs={'id': self.product.id})
+        self.detail_url = reverse('product_detail', str={'id': self.product.id})
 
     def test_list(self):
         response = self.client.get(self.list_url)

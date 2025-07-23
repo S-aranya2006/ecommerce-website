@@ -10,7 +10,8 @@ def test_product():
     product =ProductModel.objects.create(
             productName="Laptop1",
             catagory = CatagoryModel.objects.create(name = 'Laptops'),
-            image = SimpleUploadedFile("ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp", b"file_content", content_type="image/jpeg"),
+            image = SimpleUploadedFile("ecommerce-website/media/uploads/20250705171534New_DELL_XPS_13_9300_Laptop.webp",
+                                        b"file_content", content_type="image/jpeg"),
             description="A powerful laptop.",
             originalPrice=100000.00,
             sellingPrice=85000.00
