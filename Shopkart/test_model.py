@@ -2,9 +2,15 @@ import pytest
 from .models import *
 from django.core.files.uploadedfile import SimpleUploadedFile
 from  django.test import Client
+from rest_framework import status
+from django.urls import reverse
+# from django.contrib.auth.models import User
+from rest_framework.test import APIClient
+from django.contrib.auth import get_user_model
+User = get_user_model()
 
 
-client = Client()
+client = APIClient()
 @pytest.mark.django_db
 def test_product():
     product =ProductModel.objects.create(
@@ -24,12 +30,16 @@ def test_product():
 
 @pytest.mark.django_db
 def test_api():
-    url ='http://127.0.0.1:8000/show/'
+    url ='http://127.0.0.1:8000/product/'
+    user = User.objects.create_user(username='sara',password='2006')
+    client.force_authenticate(user=user)
     response = client.get(url)
-    assert response.status_code == 200
-    
-@pytest.mark.django_db
-def test_api2():
-    url ='http://127.0.0.1:8000/catagory/'  
+    assert response.status_code == status.HTTP_200_OK
+
+@pytest.mark.django_db    
+def test_authentication():
+    url =reverse("product")
+    user = User.objects.create_user(username='sara',password='2006')
+    client.force_authenticate(user=user)
     response = client.get(url)
-    assert response.status_code == 200
+    assert response.status_code == status.HTTP_200_OK

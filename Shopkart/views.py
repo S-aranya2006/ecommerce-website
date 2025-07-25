@@ -7,6 +7,8 @@ from rest_framework.response import Response
 from django.db.models import Count
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from .pagination import *
+from rest_framework.permissions import IsAuthenticated
+from django.contrib import messages
 
 def home(request):
     # catagory = CatagoryModel.objects.prefetch_related('Products')
@@ -39,16 +41,26 @@ def detail(request, id):
     return render(request, 'detail.html', {'product': product})
 
 def show(request):
-    count = ProductModel.objects.aggregate(Count('id'))
-    product =ProductModel.objects.only('productName','description','sellingPrice')
-    values = ProductModel.objects.values('description')
-    print(count)
-    return render(request,'show.html',{'products': product,'values':values,'count':count}) 
+    query = request.GET('filterproduct')
+    if len(query) > 100:
+      allproducts = ProductModel.objects.none()
+    else :
+       allproductstitle = ProductModel.objects.filter(productName__icontains = query)
+       allproductscatagory = ProductModel.objects.filter(catagory__icontains = query)   
+       allproducts = allproductstitle.union(allproductscatagory)
+    if allproducts.count() == 0:
+        messages.warning(request,'No serach results') 
+    data ={
+        "query": query,
+        "allproducts":allproducts
+    }  
+    return render(request,'show.html',data) 
 
 
     
 class ProductView(GenericAPIView,mixins.CreateModelMixin,mixins.DestroyModelMixin,mixins.ListModelMixin,
                   mixins.UpdateModelMixin,mixins.RetrieveModelMixin):
+    permission_classes =[IsAuthenticated]
     queryset = ProductModel.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'id'
@@ -101,3 +113,13 @@ class CatagoryView(GenericAPIView,mixins.CreateModelMixin,mixins.ListModelMixin,
         self.destroy(request)
         return Response("Catagory deleted!")
    
+
+
+
+
+#    def show(request):
+#     count = ProductModel.objects.aggregate(Count('id'))
+#     product =ProductModel.objects.only('productName','description','sellingPrice')
+#     values = ProductModel.objects.values('description')
+#     print(count)
+    # return render(request,'show.html',{'products': product,'values':values,'count':count}) 
